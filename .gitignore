@@ -4,16 +4,8 @@
 /server/npm-debug.log
 
 ## client
-# compiled output
 /client/dist
 /client/tmp
-
-# dependencies
 /client/node_modules
-
-# misc
+/client/e2e
 /client/npm-debug.log
-
-# e2e
-/client/e2e/*.js
-/client/e2e/*.map
