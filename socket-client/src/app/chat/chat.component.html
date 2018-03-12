@@ -1,18 +1,22 @@
 <div class="chat">
-  <button (click)="onClickUserInfo()">USER CHANGE</button>
-  <div class="chat-container" [ngClass]="[(message.action === undefined && message.from.id === user.id)? 'chat-list-item': '']"
-  *ngFor="let message of messages">
+  <div>
+      <input
+      #inputUSER
+      placeholder="User Name"
+      (keyup.enter)="onClickUserInfo(inputUSER.VALUE)">
+  </div>
+  <div class="chat-container" *ngFor="let message of messages">
     <div *ngIf="message.action === undefined">From: {{message.from.name}}</div>
     <div *ngIf="message.action === undefined">Content: {{message.content}}</div>
     <div *ngIf="message.action === 'joined'"><b>{{message.from.name}}</b> joined to the conversation.</div>
     <div *ngIf="message.action === 'renamed'"><b>{{message.content.previousUsername}}</b> is now <b>{{message.content.username}}</b></div>
   </div>
   <div>
-    <input matInput 
-    #inputMessage 
-    maxlength="140" 
-    placeholder="Type your message" 
-    [(ngModel)]="messageContent" 
+    <input
+    #inputMessage
+    maxlength="140"
+    placeholder="Type your message"
+    [(ngModel)]="messageContent"
     (keyup.enter)="sendMessage(messageContent)">
     <div>{{inputMessage.value.length}}/140</div>
   </div>

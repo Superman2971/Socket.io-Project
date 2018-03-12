@@ -16,6 +16,11 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.initIoConnection();
+    this.initModel();
+  }
+
+  private initModel(): void {
+    const randomId = (Math.floor(Math.random() * (1000000)) + 1);
   }
 
   private initIoConnection(): void {
@@ -68,5 +73,33 @@ export class ChatComponent implements OnInit {
     }
 
     this.socketService.send(message);
+  }
+
+  onClickUserInfo(name) {
+    let data;
+    if (this.user.name) {
+
+    } else {
+      data = {
+        username: this.user.name,
+        title: 'Edit Details',
+        dialogType: 'edit'
+      };
+    }
+
+    // Hit API
+    // this.dialogRef.afterClosed().subscribe(paramsDialog => {
+    //   if (!paramsDialog) {
+    //     return;
+    //   }
+
+    //   this.user.name = paramsDialog.username;
+    //   if (paramsDialog.dialogType === 'new') {
+    //     this.initIoConnection();
+    //     this.sendNotification(paramsDialog, 'joined');
+    //   } else if (paramsDialog.dialogType === 'edit') {
+    //     this.sendNotification(paramsDialog, 'rename');
+    //   }
+    // });
   }
 }
