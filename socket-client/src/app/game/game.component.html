@@ -1,7 +1,7 @@
 <div class="game">
-  <div class="user"
-    [style.background-color]="'rgb(' + color + ')'"
-    [style.left.px]="left"
-    [style.top.px]="top"
+  <div class="user" *ngFor="let user of users"
+    [style.background-color]="'rgb(' + user.color + ')'"
+    [style.left.px]="user.left"
+    [style.top.px]="user.top"
   ></div>
 </div>

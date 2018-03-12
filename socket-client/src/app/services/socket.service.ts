@@ -15,13 +15,23 @@ export class SocketService {
     this.socket = socketIo(SERVER_URL);
   }
 
-  send(message: any): void {
+  sendMessage(message: any): void {
     this.socket.emit('message', message);
   }
 
   onMessage(): Observable<any> {
     return new Observable<any>(observer => {
       this.socket.on('message', (data: any) => observer.next(data));
+    });
+  }
+
+  sendGame(game: any): void {
+    this.socket.emit('game', game);
+  }
+
+  onGame(): Observable<any> {
+    return new Observable<any>(observer => {
+      this.socket.on('game', (data: any) => observer.next(data));
     });
   }
 

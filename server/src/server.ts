@@ -9,6 +9,8 @@ export class ChatServer {
   private io: SocketIO.Server;
   private port: string | number;
 
+  private gameUsers: any[] = [];
+
   constructor() {
     this.createApp();
     this.config();
@@ -44,11 +46,26 @@ export class ChatServer {
         console.log('[server](message): %s', JSON.stringify(m));
         this.io.emit('message', m);
       });
+      socket.on('game', (g: any) => {
+        console.log('[server](message): %s', JSON.stringify(g));
+        this.characterMove(g);
+        // this.io.emit('game', g);
+      });
 
       socket.on('disconnect', () => {
         console.log('Client disconnected');
       });
     });
+  }
+
+  private characterMove(user) {
+    let userId = this.gameUsers.findIndex((gameUser) => { return gameUser.id === user.id; });
+    if (userId === -1) {
+      this.gameUsers.push(user);
+    } else {
+      this.gameUsers[userId] = user;
+    }
+    this.io.emit('game', this.gameUsers);
   }
 
   public getApp(): express.Application {

@@ -8,6 +8,7 @@ import { SocketService } from '../services/socket.service';
 })
 export class ChatComponent implements OnInit {
   user: any = {};
+  userInput: string;
   messages: any[] = [];
   messageContent: string;
   ioConnection: any;
@@ -26,8 +27,8 @@ export class ChatComponent implements OnInit {
       username: this.user.name,
       previousUsername: undefined
     };
-    // this.initIoConnection();
-    // this.sendNotification(params, 'joined');
+    this.initIoConnection();
+    this.sendNotification(params, 'joined');
   }
 
   private initIoConnection(): void {
@@ -54,7 +55,7 @@ export class ChatComponent implements OnInit {
       return;
     }
 
-    this.socketService.send({
+    this.socketService.sendMessage({
       from: this.user,
       content: message
     });
@@ -78,7 +79,7 @@ export class ChatComponent implements OnInit {
         }
       };
     }
-    this.socketService.send(message);
+    this.socketService.sendMessage(message);
   }
 
   onClickUserInfo(name) {
@@ -89,5 +90,6 @@ export class ChatComponent implements OnInit {
     };
     this.user.name = name;
     this.sendNotification(params, 'renamed');
+    this.userInput = null;
   }
 }
