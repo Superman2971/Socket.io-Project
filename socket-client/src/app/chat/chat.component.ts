@@ -4,7 +4,7 @@ import { SocketService } from '../services/socket.service';
 @Component({
   selector: 'socket-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
   user: any = {};
@@ -26,8 +26,8 @@ export class ChatComponent implements OnInit {
       username: this.user.name,
       previousUsername: undefined
     };
-    this.initIoConnection();
-    this.sendNotification(params, 'joined');
+    // this.initIoConnection();
+    // this.sendNotification(params, 'joined');
   }
 
   private initIoConnection(): void {
