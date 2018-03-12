@@ -1,9 +1,10 @@
 <div class="chat">
   <div>
       <input
-      #inputUSER
-      placeholder="User Name"
-      (keyup.enter)="onClickUserInfo(inputUSER.VALUE)">
+        [(ngModel)]="userInput"
+        placeholder="User Name"
+        (keyup.enter)="onClickUserInfo(userInput)"
+      />
   </div>
   <div class="chat-container" *ngFor="let message of messages">
     <div *ngIf="message.action === undefined">From: {{message.from.name}}</div>
@@ -13,11 +14,12 @@
   </div>
   <div>
     <input
-    #inputMessage
-    maxlength="140"
-    placeholder="Type your message"
-    [(ngModel)]="messageContent"
-    (keyup.enter)="sendMessage(messageContent)">
+      #inputMessage
+      maxlength="140"
+      placeholder="Type your message"
+      [(ngModel)]="messageContent"
+      (keyup.enter)="sendMessage(messageContent)"
+    />
     <div>{{inputMessage.value.length}}/140</div>
   </div>
 </div>

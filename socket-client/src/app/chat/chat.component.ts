@@ -7,7 +7,7 @@ import { SocketService } from '../services/socket.service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  user: any;
+  user: any = {};
   messages: any[] = [];
   messageContent: string;
   ioConnection: any;
@@ -20,10 +20,8 @@ export class ChatComponent implements OnInit {
 
   private initUser(): void {
     let params;
-    this.user = {
-      id: (Math.floor(Math.random() * (1000000)) + 1),
-      name: ('guest' + this.user.id)
-    };
+    this.user.id = (Math.floor(Math.random() * (1000000)) + 1);
+    this.user.name = ('guest' + this.user.id);
     params = {
       username: this.user.name,
       previousUsername: undefined
@@ -71,7 +69,7 @@ export class ChatComponent implements OnInit {
         from: this.user,
         action: action
       };
-    } else if (action === 'rename') {
+    } else if (action === 'renamed') {
       message = {
         action: action,
         content: {
@@ -80,17 +78,16 @@ export class ChatComponent implements OnInit {
         }
       };
     }
-
     this.socketService.send(message);
   }
 
   onClickUserInfo(name) {
     let params;
     params = {
-      username: this.user.name,
-      previousUsername: name
+      username: name,
+      previousUsername: this.user.name
     };
-    this.sendNotification(params, 'rename');
     this.user.name = name;
+    this.sendNotification(params, 'renamed');
   }
 }
