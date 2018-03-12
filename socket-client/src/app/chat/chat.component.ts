@@ -15,12 +15,21 @@ export class ChatComponent implements OnInit {
   constructor(private socketService: SocketService) { }
 
   ngOnInit(): void {
-    this.initIoConnection();
-    this.initModel();
+    this.initUser();
   }
 
-  private initModel(): void {
-    const randomId = (Math.floor(Math.random() * (1000000)) + 1);
+  private initUser(): void {
+    let params;
+    this.user = {
+      id: (Math.floor(Math.random() * (1000000)) + 1),
+      name: ('guest' + this.user.id)
+    };
+    params = {
+      username: this.user.name,
+      previousUsername: undefined
+    };
+    this.initIoConnection();
+    this.sendNotification(params, 'joined');
   }
 
   private initIoConnection(): void {
@@ -57,12 +66,12 @@ export class ChatComponent implements OnInit {
   public sendNotification(params: any, action: string): void {
     let message;
 
-    if (action === 'JOINED') {
+    if (action === 'joined') {
       message = {
         from: this.user,
         action: action
       };
-    } else if (action === 'RENAME') {
+    } else if (action === 'rename') {
       message = {
         action: action,
         content: {
@@ -76,30 +85,12 @@ export class ChatComponent implements OnInit {
   }
 
   onClickUserInfo(name) {
-    let data;
-    if (this.user.name) {
-
-    } else {
-      data = {
-        username: this.user.name,
-        title: 'Edit Details',
-        dialogType: 'edit'
-      };
-    }
-
-    // Hit API
-    // this.dialogRef.afterClosed().subscribe(paramsDialog => {
-    //   if (!paramsDialog) {
-    //     return;
-    //   }
-
-    //   this.user.name = paramsDialog.username;
-    //   if (paramsDialog.dialogType === 'new') {
-    //     this.initIoConnection();
-    //     this.sendNotification(paramsDialog, 'joined');
-    //   } else if (paramsDialog.dialogType === 'edit') {
-    //     this.sendNotification(paramsDialog, 'rename');
-    //   }
-    // });
+    let params;
+    params = {
+      username: this.user.name,
+      previousUsername: name
+    };
+    this.sendNotification(params, 'rename');
+    this.user.name = name;
   }
 }
