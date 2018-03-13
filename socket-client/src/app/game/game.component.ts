@@ -26,23 +26,14 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.socketSubscription = this.socketService.onGame()
     .subscribe((gameUsers: any) => {
-      console.log(gameUsers);
       this.users = gameUsers;
     });
   }
 
-  @HostListener('window:keydown', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    const code = event.keyCode;
-    if (code === 37) { // left
-      this.left -= 2;
-    } else if (code === 39) { // right
-      this.left += 2;
-    } else if (code === 38) { // top
-      this.top -= 2;
-    } else if (code === 40) { // down
-      this.top += 2;
-    }
+  @HostListener('mousemove', ['$event'])
+  onMousemove(event: MouseEvent) {
+    this.left = event.clientX;
+    this.top = event.clientY;
     this.socketService.sendGame({
       id: this.id,
       color: this.color,

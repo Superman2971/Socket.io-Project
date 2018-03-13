@@ -1,10 +1,10 @@
 <div class="chat">
   <div>
-      <input
-        [(ngModel)]="userInput"
-        placeholder="User Name"
-        (keyup.enter)="onClickUserInfo(userInput)"
-      />
+    <input
+      [(ngModel)]="userInput"
+      placeholder="User Name"
+      (keyup.enter)="onClickUserInfo(userInput)"
+    />
   </div>
   <div class="chat-container" *ngFor="let message of messages">
     <div *ngIf="message.action === undefined">From: {{message.from.name}}</div>
