@@ -1,15 +1,18 @@
 import { createServer, Server } from 'http';
 import * as express from 'express';
+import * as Request from 'request';
 import * as socketIo from 'socket.io';
+const https = require('https');
 
 export class ChatServer {
   public static readonly PORT:number = 8080;
   private app: express.Application;
   private server: Server;
+  private request: Request;
   private io: SocketIO.Server;
   private port: string | number;
-
   private gameUsers: any[] = [];
+  private gameQuestions: any[] = [];
 
   constructor() {
     this.createApp();
@@ -17,6 +20,7 @@ export class ChatServer {
     this.createServer();
     this.sockets();
     this.listen();
+    this.getQuestions();
   }
 
   private createApp(): void {
@@ -68,6 +72,22 @@ export class ChatServer {
     this.io.emit('game', this.gameUsers);
   }
 
+  getQuestions() {
+    https.get('https://opentdb.com/api.php?amount=10', (response) => {
+      let data = '';
+      // A chunk of data has been recieved.
+      response.on('data', (chunk) => {
+        console.log('CHUNK', chunk);
+        data += chunk;
+      });
+      // The whole response has been received. Print out the result.
+      response.on('end', () => {
+        console.log('RESPONSE', data, JSON.parse(data));
+      });
+    }).on("error", (err) => {
+      console.log('ERROR', err);
+    });
+  }
   public getApp(): express.Application {
     return this.app;
   }
