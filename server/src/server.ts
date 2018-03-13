@@ -1,6 +1,5 @@
 import { createServer, Server } from 'http';
 import * as express from 'express';
-import * as Request from 'request';
 import * as socketIo from 'socket.io';
 const https = require('https');
 
@@ -8,7 +7,6 @@ export class ChatServer {
   public static readonly PORT:number = 8080;
   private app: express.Application;
   private server: Server;
-  private request: Request;
   private io: SocketIO.Server;
   private port: string | number;
   private gameUsers: any[] = [];
@@ -72,17 +70,20 @@ export class ChatServer {
     this.io.emit('game', this.gameUsers);
   }
 
-  getQuestions() {
+  private getQuestions() {
     https.get('https://opentdb.com/api.php?amount=10', (response) => {
       let data = '';
       // A chunk of data has been recieved.
       response.on('data', (chunk) => {
-        console.log('CHUNK', chunk);
+        // console.log('CHUNK', chunk);
         data += chunk;
       });
       // The whole response has been received. Print out the result.
       response.on('end', () => {
-        console.log('RESPONSE', data, JSON.parse(data));
+        // console.log('RESPONSE', data, JSON.parse(data));
+        this.gameQuestions = JSON.parse(data).results;
+        console.log(this.gameQuestions);
+        this.serveQuestions();
       });
     }).on("error", (err) => {
       console.log('ERROR', err);
@@ -90,5 +91,18 @@ export class ChatServer {
   }
   public getApp(): express.Application {
     return this.app;
+  }
+
+  private serveQuestions() {
+    let index = 0;
+    let interval = setInterval(() => {
+      console.log('serve', index, this.gameQuestions[index]);
+      if (index < this.gameQuestions.length) {
+        this.io.emit('question', this.gameQuestions[index]);
+      } else {
+        clearInterval(interval); // future this won't clear but instead aquire more questions
+      }
+      index++;
+    }, 5000);
   }
 }
