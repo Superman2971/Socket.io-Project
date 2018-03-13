@@ -13,6 +13,7 @@ export class GameComponent implements OnInit {
   left: number;
   top: number;
   socketSubscription: any;
+  socketSubscription2: any;
 
   constructor(private socketService: SocketService) {
     this.id = Math.floor(Math.random() * 1000000) + 1;
@@ -27,6 +28,11 @@ export class GameComponent implements OnInit {
     this.socketSubscription = this.socketService.onGame()
     .subscribe((gameUsers: any) => {
       this.users = gameUsers;
+    });
+
+    this.socketSubscription2 = this.socketService.onQuestion()
+    .subscribe((question: any) => {
+      console.log('Question', question);
     });
   }
 
