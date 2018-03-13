@@ -1,18 +1,27 @@
 <div class="chat">
-  <div>
-    <input
-      [(ngModel)]="userInput"
+  <div class="name">
+    <button *ngIf="!showInput" type="button" (click)="showInput = !showInput">Change Name</button>
+    <input *ngIf="showInput"
+      maxlength="20"
       placeholder="User Name"
-      (keyup.enter)="onClickUserInfo(userInput)"
+      [(ngModel)]="userInput"
+      (keyup.enter)="onClickUserInfo(userInput); showInput = !showInput"
     />
   </div>
-  <div class="chat-container" *ngFor="let message of messages">
-    <div *ngIf="message.action === undefined">From: {{message.from.name}}</div>
-    <div *ngIf="message.action === undefined">Content: {{message.content}}</div>
-    <div *ngIf="message.action === 'joined'"><b>{{message.from.name}}</b> joined to the conversation.</div>
-    <div *ngIf="message.action === 'renamed'"><b>{{message.content.previousUsername}}</b> is now <b>{{message.content.username}}</b></div>
+  <div class="message" *ngFor="let message of messages"
+  [style.background-color]="'rgba(' + message.from.color + ', 0.36)'">
+    <div *ngIf="message.action === undefined">
+      <div class="from" [innerHtml]="message.from.name"></div>
+      <div [innerHtml]="message.content"></div>
+    </div>
+    <div *ngIf="message.action === 'joined'">
+      <b>{{message.from.name}}</b> joined to the conversation.
+    </div>
+    <div *ngIf="message.action === 'renamed'">
+      <b>{{message.content.previousUsername}}</b> is now <b>{{message.content.username}}</b>
+    </div>
   </div>
-  <div>
+  <div class="input">
     <input
       #inputMessage
       maxlength="140"

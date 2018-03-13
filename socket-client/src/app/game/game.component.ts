@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 
 @Component({
@@ -7,22 +7,12 @@ import { SocketService } from '../services/socket.service';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
+  @Input() user;
   users: any[] = [];
-  id: number;
-  color: string;
-  left: number;
-  top: number;
   socketSubscription: any;
   socketSubscription2: any;
 
-  constructor(private socketService: SocketService) {
-    this.id = Math.floor(Math.random() * 1000000) + 1;
-    this.color = (Math.floor(Math.random() * 255) + 1) +
-      ',' + (Math.floor(Math.random() * 255) + 1) +
-      ',' + (Math.floor(Math.random() * 255) + 1);
-    this.left = 0;
-    this.top = 0;
-  }
+  constructor(private socketService: SocketService) {}
 
   ngOnInit() {
     this.socketSubscription = this.socketService.onGame()
@@ -38,13 +28,13 @@ export class GameComponent implements OnInit {
 
   @HostListener('mousemove', ['$event'])
   onMousemove(event: MouseEvent) {
-    this.left = event.clientX;
-    this.top = event.clientY;
+    this.user.left = event.clientX;
+    this.user.top = event.clientY;
     this.socketService.sendGame({
-      id: this.id,
-      color: this.color,
-      left: this.left,
-      top: this.top
+      id: this.user.id,
+      color: this.user.color,
+      left: this.user.left,
+      top: this.user.top
     });
   }
 }

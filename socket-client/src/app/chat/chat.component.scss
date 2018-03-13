@@ -1,3 +1,46 @@
 .chat {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  padding: 32px 16px;
   position: relative;
+  text-align: left;
+
+  .name {
+    position: absolute;
+    right: 16px;
+    top: 0;
+
+    input {
+      outline: none;
+    }
+  }
+
+  .message {
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.86);
+    font-size: 14px;
+    margin: 0 0 16px;
+    padding: 4px 8px;
+
+    .from {
+      font-size: 12px;
+    }
+  }
+
+  .input {
+    align-items: flex-end;
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    justify-content: flex-start;
+
+    input {
+      border: 1px solid rgba(0, 0, 0, 0.24);
+      border-radius: 2px;
+      margin: 0 8px 0 0;
+      outline: none;
+      padding: 4px 8px;
+      width: 100%;
+    }
+  }
 }

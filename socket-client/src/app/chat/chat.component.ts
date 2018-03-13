@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { SocketService } from '../services/socket.service';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
-  user: any = {};
+  @Input() user;
   userInput: string;
   messages: any[] = [];
   messageContent: string;
@@ -26,7 +26,6 @@ export class ChatComponent implements OnInit {
 
   private initUser(): void {
     let params;
-    this.user.id = (Math.floor(Math.random() * (1000000)) + 1);
     this.user.name = ('guest' + this.user.id);
     params = {
       username: this.user.name,
@@ -58,6 +57,7 @@ export class ChatComponent implements OnInit {
     } else if (action === 'renamed') {
       message = {
         action: action,
+        from: this.user,
         content: {
           username: this.user.name,
           previousUsername: params.previousUsername

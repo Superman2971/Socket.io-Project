@@ -7,6 +7,10 @@ import { SocketService } from '../services/socket.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+  user: any = {
+    id: null,
+    color: null
+  };
   constructor(private socketService: SocketService) {
     this.socketService.initSocket();
 
@@ -19,5 +23,11 @@ export class HomeComponent {
     .subscribe((data) => {
       console.log('disconnected', data);
     });
+
+    // user creation
+    this.user.id = Math.floor(Math.random() * 1000000) + 1;
+    this.user.color = (Math.floor(Math.random() * 255) + 1) +
+      ',' + (Math.floor(Math.random() * 255) + 1) +
+      ',' + (Math.floor(Math.random() * 255) + 1);
   }
 }
