@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 // Components
 import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
 import { GameComponent } from './game/game.component';
 // Services
@@ -11,10 +12,10 @@ import { SocketService } from './services/socket.service';
 
 const routes: Routes = [{
   path: '',
-  component: ChatComponent
+  component: HomeComponent
 }, {
   path: '**',
-  component: ChatComponent
+  component: HomeComponent
 }];
 
 @NgModule({
@@ -25,6 +26,7 @@ const routes: Routes = [{
   ],
   declarations: [
     AppComponent,
+    HomeComponent,
     ChatComponent,
     GameComponent
   ],

@@ -11,9 +11,14 @@ export class ChatComponent implements OnInit {
   userInput: string;
   messages: any[] = [];
   messageContent: string;
-  ioConnection: any;
+  chatSubscription: any;
 
-  constructor(private socketService: SocketService) { }
+  constructor(private socketService: SocketService) {
+    this.chatSubscription = this.socketService.onMessage()
+    .subscribe((message: any) => {
+      this.messages.push(message);
+    });
+  }
 
   ngOnInit(): void {
     this.initUser();
@@ -27,27 +32,7 @@ export class ChatComponent implements OnInit {
       username: this.user.name,
       previousUsername: undefined
     };
-    this.initIoConnection();
     this.sendNotification(params, 'joined');
-  }
-
-  private initIoConnection(): void {
-    this.socketService.initSocket();
-
-    this.ioConnection = this.socketService.onMessage()
-    .subscribe((message: any) => {
-      this.messages.push(message);
-    });
-
-    this.socketService.onEvent('connect')
-    .subscribe((data) => {
-      console.log('connected', data);
-    });
-
-    this.socketService.onEvent('disconnect')
-    .subscribe((data) => {
-      console.log('disconnected', data);
-    });
   }
 
   public sendMessage(message: string): void {
