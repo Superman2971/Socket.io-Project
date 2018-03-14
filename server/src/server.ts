@@ -98,11 +98,37 @@ export class ChatServer {
     let interval = setInterval(() => {
       console.log('serve', index, this.gameQuestions[index]);
       if (index < this.gameQuestions.length) {
-        this.io.emit('question', this.gameQuestions[index]);
+        let q: any = {
+          category: this.gameQuestions[index].category,
+          answers: this.shuffle(this.gameQuestions[index].incorrect_answers),
+          question: this.gameQuestions[index].question,
+          type: this.gameQuestions[index].type
+        }
+        this.io.emit('question', q);
       } else {
         clearInterval(interval); // future this won't clear but instead aquire more questions
       }
       index++;
     }, 5000);
+  }
+
+  private shuffle(array) {
+    if (!array) {
+      return;
+    }
+    let currentIndex = array.length;
+    let temporaryValue;
+    let randomIndex;
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
   }
 }
