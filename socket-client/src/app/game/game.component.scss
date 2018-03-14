@@ -14,4 +14,35 @@
     max-width: 8px;
     min-width: 8px;
   }
+
+  .question {
+    background-color: rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    font-size: 18px;
+    padding: 24px;
+    text-align: center;
+
+    .category {
+      color: rgba(0, 0, 0, 0.54);
+      font-size: 12px;
+      margin: 0 0 8px;
+    }
+
+    .button {
+      background-color: rgba(0, 0, 0, 0.12);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 16px 0 0;
+      padding: 8px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.24);
+      }
+
+      &.selected {
+        background-color: rgba(0, 0, 0, 0.24);
+      }
+    }
+  }
 }

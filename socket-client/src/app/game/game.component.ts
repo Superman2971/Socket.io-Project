@@ -9,6 +9,23 @@ import { SocketService } from '../services/socket.service';
 export class GameComponent implements OnInit {
   @Input() user;
   users: any[] = [];
+  // question: any = {
+  //   category: null,
+  //   answers: null,
+  //   question: null,
+  //   type: null
+  // };
+  question: any = {
+    category: 'Entertainment: Video Games',
+    answers: [
+      'Mario Kart: Double Dash',
+      'Mario Kart 64',
+      'Super Mario Kart'
+    ],
+    question: 'Which ones of these Mario Kart games was made for the Gameboy Advance?',
+    type: 'multiple'
+  };
+  selectedAnswer: any;
   socketSubscription: any;
   socketSubscription2: any;
 
@@ -22,6 +39,7 @@ export class GameComponent implements OnInit {
 
     this.socketSubscription2 = this.socketService.onQuestion()
     .subscribe((question: any) => {
+      this.question = question;
       console.log('Question', question);
     });
   }

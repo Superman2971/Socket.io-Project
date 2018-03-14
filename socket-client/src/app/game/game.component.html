@@ -1,7 +1,25 @@
 <div class="game">
-  <div class="user" *ngFor="let user of users"
-    [style.background-color]="'rgb(' + user.color + ')'"
-    [style.left.px]="user.left"
-    [style.top.px]="user.top"
-  ></div>
+  <div *ngFor="let cursor of users">
+    <div *ngIf="cursor.id !== user.id" class="user"
+      [style.background-color]="'rgb(' + cursor.color + ')'"
+      [style.left.px]="cursor.left"
+      [style.top.px]="cursor.top"
+    ></div>
+  </div>
+  <div class="question">
+    <div class="category" [innerHTML]="question.category"></div>
+    <div [innerHTML]="question.question"></div>
+    <div *ngIf="question.type === 'boolean'">
+      <div class="button">TRUE</div>
+      <div class="button">FALSE</div>
+    </div>
+    <div *ngIf="question.type === 'multiple'">
+      <div class="button"
+        [class.selected]="selectedAnswer === answer"
+        [innerHTML]="answer"
+        *ngFor="let answer of question.answers"
+        (click)="selectedAnswer = answer"
+      ></div>
+    </div>
+  </div>
 </div>
