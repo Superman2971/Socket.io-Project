@@ -41,6 +41,16 @@ export class SocketService {
     });
   }
 
+  sendAnswer(answer: any): void {
+    this.socket.emit('answer', answer);
+  }
+
+  onScoreboard(): Observable<any> {
+    return new Observable<any>(observer => {
+      this.socket.on('scoreboard', (data: any) => observer.next(data));
+    });
+  }
+
   onEvent(event: string): Observable<any> {
     return new Observable<Event>(observer => {
       this.socket.on(event, () => observer.next());

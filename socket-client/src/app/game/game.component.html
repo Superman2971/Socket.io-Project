@@ -10,15 +10,15 @@
     <div class="category" [innerHTML]="question.category"></div>
     <div [innerHTML]="question.question"></div>
     <div *ngIf="question.type === 'boolean'">
-      <div class="button">TRUE</div>
-      <div class="button">FALSE</div>
+      <div class="button" (click)="clickedAnswer('true')">TRUE</div>
+      <div class="button" (click)="clickedAnswer('false')">FALSE</div>
     </div>
     <div *ngIf="question.type === 'multiple'">
       <div class="button"
         [class.selected]="selectedAnswer === answer"
         [innerHTML]="answer"
         *ngFor="let answer of question.answers"
-        (click)="selectedAnswer = answer"
+        (click)="clickedAnswer(answer)"
       ></div>
     </div>
   </div>

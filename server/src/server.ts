@@ -11,6 +11,9 @@ export class ChatServer {
   private port: string | number;
   private gameUsers: any[] = [];
   private gameQuestions: any[] = [];
+  private previousQuestionAnswer: any;
+  private currentQuestionAnswer: any;
+  private scoreboard: any[] = [];
 
   constructor() {
     this.createApp();
@@ -45,13 +48,17 @@ export class ChatServer {
     this.io.on('connect', (socket: any) => {
       console.log('Connected client on port %s.', this.port);
       socket.on('message', (m: any) => {
-        console.log('[server](message): %s', JSON.stringify(m));
+        // console.log('[server](message): %s', JSON.stringify(m));
         this.io.emit('message', m);
       });
       socket.on('game', (g: any) => {
-        console.log('[server](message): %s', JSON.stringify(g));
+        // console.log('[server](game): %s', JSON.stringify(g));
         this.characterMove(g);
         // this.io.emit('game', g);
+      });
+      socket.on('answer', (answer: any) => {
+        console.log('[server](answer): %s', JSON.stringify(answer));
+        this.checkUserAnswer(answer);
       });
 
       socket.on('disconnect', () => {
@@ -96,11 +103,13 @@ export class ChatServer {
   private serveQuestions() {
     let index = 0;
     let interval = setInterval(() => {
-      console.log('serve', index, this.gameQuestions[index]);
+      // console.log('serve', index, this.gameQuestions[index]);
       if (index < this.gameQuestions.length) {
+        this.previousQuestionAnswer = this.currentQuestionAnswer;
+        this.currentQuestionAnswer = this.gameQuestions[index].correct_answer;
         let q: any = {
           category: this.gameQuestions[index].category,
-          answers: this.shuffle(this.gameQuestions[index].incorrect_answers),
+          answers: this.shuffle(this.gameQuestions[index].incorrect_answers, this.gameQuestions[index].correct_answer),
           question: this.gameQuestions[index].question,
           type: this.gameQuestions[index].type
         }
@@ -109,14 +118,15 @@ export class ChatServer {
         clearInterval(interval); // future this won't clear but instead aquire more questions
       }
       index++;
-    }, 5000);
+    }, 10000);
   }
 
-  private shuffle(array) {
-    if (!array) {
-      return;
+  private shuffle(answerArray, correctAnswer) {
+    if (!answerArray || !correctAnswer) {
+      return [];
     }
-    let currentIndex = array.length;
+    answerArray.push(correctAnswer); // push correct answer into incorrect answer (for some reason this return the new length)
+    let currentIndex = answerArray.length;
     let temporaryValue;
     let randomIndex;
     // While there remain elements to shuffle...
@@ -125,10 +135,31 @@ export class ChatServer {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
       // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
+      temporaryValue = answerArray[currentIndex];
+      answerArray[currentIndex] = answerArray[randomIndex];
+      answerArray[randomIndex] = temporaryValue;
     }
-    return array;
+    return answerArray;
+  }
+
+  private checkUserAnswer(user) {
+    console.log(user.answer, this.previousQuestionAnswer);
+    if (this.previousQuestionAnswer === user.answer) {
+      this.updateUserScore(user);
+    }
+  }
+
+  private updateUserScore(user) {
+    let userId = this.scoreboard.findIndex((gameUser) => { return gameUser.id === user.id; });
+    if (userId === -1) {
+      this.scoreboard.push({
+        id: user.id,
+        name: user.name,
+        score: 10
+      });
+    } else {
+      this.scoreboard[userId].score += 10;
+    }
+    this.io.emit('scoreboard', this.scoreboard);
   }
 }
