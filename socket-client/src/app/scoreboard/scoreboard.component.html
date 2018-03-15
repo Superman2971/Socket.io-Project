@@ -1,0 +1,6 @@
+<div class="scoreboard">
+  <div class="score" *ngFor="let score of scores">
+    <div [innerHtml]="score.name"></div>
+    <div class="number" [innerHtml]="score.score"></div>
+  </div>
+</div>

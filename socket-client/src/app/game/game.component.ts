@@ -29,7 +29,6 @@ export class GameComponent implements OnInit {
   scoreboard: any;
   socketSubscription: any;
   socketSubscription2: any;
-  socketSubscription3: any;
 
   constructor(private socketService: SocketService) {}
 
@@ -52,12 +51,6 @@ export class GameComponent implements OnInit {
       this.question = question;
       console.log('Question', question);
       this.selectedAnswer = null;
-    });
-
-    this.socketSubscription3 = this.socketService.onScoreboard()
-    .subscribe((scores: any) => {
-      console.log('scoreboard', scores);
-      this.scoreboard = scores;
     });
   }
 

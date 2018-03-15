@@ -1,10 +1,10 @@
 .home {
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: 1fr 288px;
+  grid-template-columns: 1fr 1fr 288px;
   position: relative;
 
-  @media (max-width: 600px) {
+  @media (max-width: 959px) {
     grid-template-columns: 1fr;
   }
 }

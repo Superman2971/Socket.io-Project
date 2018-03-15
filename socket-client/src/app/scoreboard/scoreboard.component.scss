@@ -1,0 +1,16 @@
+.scoreboard {
+  background-color: rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  padding: 24px;
+  position: relative;
+
+  .score {
+    display: flex;
+    flex-direction: row;
+    margin: 0 0 16px;
+
+    .number {
+      margin: 0 0 0 16px;
+    }
+  }
+}

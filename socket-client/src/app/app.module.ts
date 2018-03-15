@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
 import { GameComponent } from './game/game.component';
+import { ScoreboardComponent } from './scoreboard/scoreboard.component';
 // Services
 import { SocketService } from './services/socket.service';
 
@@ -28,7 +29,8 @@ const routes: Routes = [{
     AppComponent,
     HomeComponent,
     ChatComponent,
-    GameComponent
+    GameComponent,
+    ScoreboardComponent
   ],
   providers: [
     SocketService
