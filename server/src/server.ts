@@ -48,7 +48,13 @@ export class ChatServer {
     });
 
     this.io.on('connect', (socket: any) => {
-      console.log('Connected client on port %s.', this.port);
+      console.log('Connected client on port %s.', this.port, socket.id);
+      // create the userId and save to socket so we can remove them on disconnect
+      // (socket.id).socket.emit('user', {
+      //   id: (Math.floor(Math.random() * 1000000) + 1),
+      //   socket: socket.id
+      // });
+      // set up the subscriptions
       socket.on('message', (m: any) => {
         // console.log('[server](message): %s', JSON.stringify(m));
         this.io.emit('message', m);
@@ -64,7 +70,7 @@ export class ChatServer {
       });
 
       socket.on('disconnect', () => {
-        console.log('Client disconnected');
+        console.log('Client disconnected', socket.id);
       });
     });
   }

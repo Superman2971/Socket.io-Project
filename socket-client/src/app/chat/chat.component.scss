@@ -1,6 +1,9 @@
 .chat {
   background-color: rgba(0, 0, 0, 0.03);
   border-radius: 6px;
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: scroll;
   padding: 32px 16px;
   position: relative;
   text-align: left;
@@ -19,7 +22,7 @@
     border-radius: 4px;
     color: rgba(0, 0, 0, 0.86);
     font-size: 14px;
-    margin: 0 0 16px;
+    margin: 16px 0 0;
     padding: 4px 8px;
 
     .from {

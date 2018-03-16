@@ -10,7 +10,8 @@ import { ApiService } from '../services/api.service';
 export class HomeComponent {
   user: any = {
     id: null,
-    color: null
+    color: null,
+    socket: null
   };
   initScoreboard: any;
   initQuestion: any = {
@@ -27,8 +28,8 @@ export class HomeComponent {
     this.socketService.initSocket();
 
     this.socketService.onEvent('connect')
-    .subscribe((data) => {
-      console.log('connected', data);
+    .subscribe(() => {
+      console.log('connected');
     });
 
     this.socketService.onEvent('disconnect')
@@ -36,8 +37,15 @@ export class HomeComponent {
       console.log('disconnected', data);
     });
 
+    // this.socketService.onEvent('user')
+    // .subscribe((data) => {
+    //   console.log('userId', data);
+    //   this.user.id = data.id;
+    //   this.user.socket = data.socket;
+    // });
+
     // user creation
-    this.user.id = Math.floor(Math.random() * 1000000) + 1;
+    // this.user.id = Math.floor(Math.random() * 1000000) + 1;
     this.user.color = (Math.floor(Math.random() * 255) + 1) +
       ',' + (Math.floor(Math.random() * 255) + 1) +
       ',' + (Math.floor(Math.random() * 255) + 1);

@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  api_url: 'http://localhost:3080'
+  api_url: 'localhost:3080'
+  // api_url: 'http://dev.supplyhub.com:3080'
 };

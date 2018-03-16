@@ -16,7 +16,7 @@ export class ChatComponent implements OnInit {
   constructor(private socketService: SocketService) {
     this.chatSubscription = this.socketService.onMessage()
     .subscribe((message: any) => {
-      this.messages.push(message);
+      this.messages.unshift(message);
     });
   }
 
