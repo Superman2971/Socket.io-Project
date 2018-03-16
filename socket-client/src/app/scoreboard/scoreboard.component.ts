@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { SocketService } from '../services/socket.service';
   styleUrls: ['./scoreboard.component.scss']
 })
 export class ScoreboardComponent implements OnInit {
-  scores: any;
+  @Input() scores: any;
   socketSubscription: any;
 
   constructor(private socketService: SocketService) {}

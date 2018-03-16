@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 // Components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -10,6 +11,7 @@ import { GameComponent } from './game/game.component';
 import { ScoreboardComponent } from './scoreboard/scoreboard.component';
 // Services
 import { SocketService } from './services/socket.service';
+import { ApiService } from './services/api.service';
 
 const routes: Routes = [{
   path: '',
@@ -23,6 +25,7 @@ const routes: Routes = [{
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     RouterModule.forRoot(routes)
   ],
   declarations: [
@@ -33,7 +36,8 @@ const routes: Routes = [{
     ScoreboardComponent
   ],
   providers: [
-    SocketService
+    SocketService,
+    ApiService
   ],
   bootstrap: [AppComponent]
 })

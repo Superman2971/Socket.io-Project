@@ -1,5 +1,5 @@
 <div class="home">
-  <socket-game [user]="user"></socket-game>
-  <socket-scoreboard></socket-scoreboard>
+  <socket-game [user]="user" [question]="initQuestion"></socket-game>
+  <socket-scoreboard [scores]="initScoreboard"></socket-scoreboard>
   <socket-chat [user]="user"></socket-chat>
 </div>

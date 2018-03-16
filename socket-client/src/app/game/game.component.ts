@@ -9,7 +9,7 @@ import { SocketService } from '../services/socket.service';
 export class GameComponent implements OnInit {
   @Input() user;
   users: any[] = [];
-  question: any = {
+  @Input() question: any = {
     category: null,
     answers: null,
     question: null,

@@ -11,8 +11,8 @@ export class ChatServer {
   private port: string | number;
   private gameUsers: any[] = [];
   private gameQuestions: any[] = [];
-  private previousQuestionAnswer: any;
-  private currentQuestionAnswer: any;
+  private previousQuestion: any;
+  private currentQuestion: any;
   private scoreboard: any[] = [];
 
   constructor() {
@@ -22,6 +22,8 @@ export class ChatServer {
     this.sockets();
     this.listen();
     this.getQuestions();
+    this.changeApiAccess();
+    this.defineRoutes();
   }
 
   private createApp(): void {
@@ -57,7 +59,7 @@ export class ChatServer {
         // this.io.emit('game', g);
       });
       socket.on('answer', (answer: any) => {
-        console.log('[server](answer): %s', JSON.stringify(answer));
+        // console.log('[server](answer): %s', JSON.stringify(answer));
         this.checkUserAnswer(answer);
       });
 
@@ -89,7 +91,7 @@ export class ChatServer {
       response.on('end', () => {
         // console.log('RESPONSE', data, JSON.parse(data));
         this.gameQuestions = JSON.parse(data).results;
-        console.log(this.gameQuestions);
+        // console.log(this.gameQuestions);
         this.serveQuestions();
       });
     }).on("error", (err) => {
@@ -105,8 +107,8 @@ export class ChatServer {
     let interval = setInterval(() => {
       // console.log('serve', index, this.gameQuestions[index]);
       if (index < this.gameQuestions.length) {
-        this.previousQuestionAnswer = this.currentQuestionAnswer;
-        this.currentQuestionAnswer = this.gameQuestions[index].correct_answer;
+        this.previousQuestion = this.currentQuestion;
+        this.currentQuestion = this.gameQuestions[index];
         let q: any = {
           category: this.gameQuestions[index].category,
           answers: this.shuffle(this.gameQuestions[index].incorrect_answers, this.gameQuestions[index].correct_answer),
@@ -115,10 +117,11 @@ export class ChatServer {
         }
         this.io.emit('question', q);
       } else {
-        clearInterval(interval); // future this won't clear but instead aquire more questions
+        clearInterval(interval);
+        this.getQuestions();
       }
       index++;
-    }, 10000);
+    }, 30000);
   }
 
   private shuffle(answerArray, correctAnswer) {
@@ -143,9 +146,11 @@ export class ChatServer {
   }
 
   private checkUserAnswer(user) {
-    console.log(user.answer, this.previousQuestionAnswer);
-    if (this.previousQuestionAnswer === user.answer) {
-      this.updateUserScore(user);
+    if (this.previousQuestion && user) {
+      console.log(user.answer, this.previousQuestion.correct_answer);
+      if (this.previousQuestion.correct_answer === user.answer) {
+        this.updateUserScore(user);
+      }
     }
   }
 
@@ -161,5 +166,43 @@ export class ChatServer {
       this.scoreboard[userId].score += 10;
     }
     this.io.emit('scoreboard', this.scoreboard);
+  }
+
+  private changeApiAccess() {
+    // Add headers
+    this.app.use(function (req, res, next) {
+
+      // Website you wish to allow to connect
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+
+      // Request methods you wish to allow
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+      // Request headers you wish to allow
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+      // Pass to next layer of middleware
+      next();
+    });
+  }
+
+  private defineRoutes() {
+    this.app.get('/test', (req, res) => {
+      if (this.currentQuestion) {
+        res.send({
+          scoreboard: this.scoreboard,
+          question: {
+            category: this.currentQuestion.category,
+            answers: this.shuffle(this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer),
+            question: this.currentQuestion.question,
+            type: this.currentQuestion.type
+          }
+        });
+      } else {
+        res.send({
+          scoreboard: this.scoreboard
+        });
+      }
+    });
   }
 }
