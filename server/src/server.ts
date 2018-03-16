@@ -4,7 +4,7 @@ import * as socketIo from 'socket.io';
 const https = require('https');
 
 export class ChatServer {
-  public static readonly PORT:number = 8080;
+  public static readonly PORT:number = 3080;
   private app: express.Application;
   private server: Server;
   private io: SocketIO.Server;
@@ -163,6 +163,7 @@ export class ChatServer {
         score: 10
       });
     } else {
+      this.scoreboard[userId].name = user.name;
       this.scoreboard[userId].score += 10;
     }
     this.io.emit('scoreboard', this.scoreboard);

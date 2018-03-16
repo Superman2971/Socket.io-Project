@@ -29,6 +29,8 @@ export class GameComponent implements OnInit {
   scoreboard: any;
   socketSubscription: any;
   socketSubscription2: any;
+  clock: number;
+  timer: any;
 
   constructor(private socketService: SocketService) {}
 
@@ -51,6 +53,7 @@ export class GameComponent implements OnInit {
       this.question = question;
       console.log('Question', question);
       this.selectedAnswer = null;
+      this.initCountdown();
     });
   }
 
@@ -75,5 +78,16 @@ export class GameComponent implements OnInit {
     } else {
       this.selectedAnswer = answer;
     }
+  }
+
+  initCountdown() {
+    clearInterval(this.timer); // ensure previous timer is cleared
+    this.clock = 30; // reset to 30 seconds
+    this.timer = setInterval(() => {
+      --this.clock;
+      if (this.clock <= 0) {
+        clearInterval(this.timer);
+      }
+    }, 1000);
   }
 }
