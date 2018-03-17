@@ -1,5 +1,4 @@
 .game {
-  border: 1px solid rgba(0, 0, 0, 0.12);
   min-height: 200px;
   position: relative;
 
@@ -17,7 +16,9 @@
 
   .question {
     background-color: rgba(0, 0, 0, 0.12);
+    border: 2px solid #fff;
     border-radius: 6px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     font-size: 18px;
     padding: 24px;
     text-align: center;

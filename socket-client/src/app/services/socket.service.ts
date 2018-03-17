@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import * as socketIo from 'socket.io-client';
+import { environment } from '../../environments/environment';
 
-const SERVER_URL = 'localhost:3080';
-// const SERVER_URL = 'http://dev.supplyhub.com:3080';
+const SERVER_URL = `${environment.api_url}`;
 
 @Injectable()
 export class SocketService {
-  private socket;
+  public socket;
+  socketId: undefined;
 
   constructor() {}
 
   initSocket(): void {
     this.socket = socketIo(SERVER_URL);
+    this.socketId = this.socket.id;
   }
 
   sendMessage(message: any): void {

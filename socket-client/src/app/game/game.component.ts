@@ -45,7 +45,7 @@ export class GameComponent implements OnInit {
       if (this.selectedAnswer) {
         console.log('send answer', this.selectedAnswer);
         this.socketService.sendAnswer({
-          id: this.user.id,
+          id: this.user.socket,
           name: this.user.name,
           answer: this.selectedAnswer
         });
@@ -62,6 +62,7 @@ export class GameComponent implements OnInit {
     this.user.left = event.clientX;
     this.user.top = event.clientY;
     this.socketService.sendGame({
+      socket: this.user.socket,
       id: this.user.id,
       color: this.user.color,
       left: this.user.left,

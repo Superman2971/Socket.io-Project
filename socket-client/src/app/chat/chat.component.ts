@@ -12,6 +12,7 @@ export class ChatComponent implements OnInit {
   messages: any[] = [];
   messageContent: string;
   chatSubscription: any;
+  showInput = false;
 
   constructor(private socketService: SocketService) {
     this.chatSubscription = this.socketService.onMessage()

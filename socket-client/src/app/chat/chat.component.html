@@ -1,12 +1,12 @@
 <div class="chat">
   <div class="name">
-    <button *ngIf="!showInput" type="button" (click)="showInput = !showInput">Change Name</button>
     <input *ngIf="showInput"
       maxlength="20"
       placeholder="User Name"
       [(ngModel)]="userInput"
       (keyup.enter)="onClickUserInfo(userInput); showInput = !showInput"
     />
+    <img (click)="showInput = !showInput" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMxSURBVGhD7dpLyIxRHMfxwev2umVj41IohA0icglZYKEsyN2asFOuGxZKkYUdkp0UFkgpyTVZiiJZuUQSJffr96em/vPMmZlzzjzneab41Wfzzjmn5z/znOdyzlv5F9MHIzGmAKPRjdwyD8fxHL9L8A7nsRq9EJwRuAzX4GV5iFnwzjS8gGuwsn3BOrSMfgnXafQZd3AWZwpyDW+RPZZvWIimyZ5OX7EHg1BGurAGr2CP6yUGwJn5sI1VxCJ0QnS1fAZ7fLvhjK5OtuEudFJ0BbXH9wjO2LmhSdXO6TQV67EZyzAUeeQubDG639RENzvb4DZisgD3YccSTdBjGIx2cgB23LpJPxy2wUWEZit+wI6TdRP7sQMTEJptsOOtQk1GwTYILWQOWhWR9R0qPiSbYMfQFa0m7RSiS+RT2P6+fmImfJO0kJWwfUOdhm+SFnIFtm+oj2h4c8skWSF6Iv0A2zfGDPgkWSETYfvF0j3HJ8kK0SOM7RdLB+iTZIXohmT7xSq9kPGw/WJ5vWOQZIX0hF5Hbd8YeiD0SbJClHOwfWP4PoMlK6Q3PsH2jbEYPklWyBDYfrHqDqhBks4R13t1qLnwSdI5cgq2bygtbPSDT5IWMgW2b6jD8E3SQpSN0FugHcOH3iZD3hqTF6LcgB3DxziEpJBCtsCO0YoWEkJTSCH9kV1Ia0arK6EppBBlOew4jVxFTAorRNFSkh3LZTpiUlghemN8AjtWllb6Y1NIIT2QXUBz0cqJFvJikqyQYViLkwjZ1foFXbX2QWtiWlLySe6FLMUl6Nu1/WK9hxbRtcnULFpLtv3qCtHGo21wHa7Mxj3Ytnm7gEbLqVputW2dj//6VqoN9ESrhe1qNIkPIa9foBXtBmyH5p2NzgLbbjLqot1T22gDFBWR/awoJ1AtRtvWWi+ufvYaeo2oi1a27SBvMBYHzd/KsBd9kX2WOwpn9M0/gG2svbqYp9o86X3lVuZver3Wxm3DaGVce4e2UyfSA2rL6L8Myv4VmjkC7+jOq9PKNVBZdDqFbgz9zUDsxGO4Bi6Krk6a2E3nhG+0e6pfaUWBlmASnJfY/+nsVCp/AGbNfeoGTwYBAAAAAElFTkSuQmCC">
   </div>
   <div class="input">
     <input

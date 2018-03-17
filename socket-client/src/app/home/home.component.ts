@@ -37,30 +37,28 @@ export class HomeComponent {
       console.log('disconnected', data);
     });
 
-    // this.socketService.onEvent('user')
-    // .subscribe((data) => {
-    //   console.log('userId', data);
-    //   this.user.id = data.id;
-    //   this.user.socket = data.socket;
-    // });
-
     // user creation
-    // this.user.id = Math.floor(Math.random() * 1000000) + 1;
+    this.user.id = Math.floor(Math.random() * 1000000) + 1;
     this.user.color = (Math.floor(Math.random() * 255) + 1) +
       ',' + (Math.floor(Math.random() * 255) + 1) +
       ',' + (Math.floor(Math.random() * 255) + 1);
+      if (this.socketService.socket.id) {
+        this.user.socket = this.socketService.socket.id;
+      }
 
     // Set initial question and scoreboard
     this.grabInitialData();
   }
 
   grabInitialData() {
-    console.log('make the call');
     // Call for initial questions and scoreboard
     this.api.getInitialInfo().subscribe((data) => {
       console.log('data', data);
       this.initScoreboard = data.scoreboard;
       this.initQuestion = data.question;
+      if (this.socketService.socket.id) {
+        this.user.socket = this.socketService.socket.id;
+      }
     }, (err) => {
       console.log('err', err);
     });

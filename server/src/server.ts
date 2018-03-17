@@ -48,9 +48,9 @@ export class ChatServer {
     });
 
     this.io.on('connect', (socket: any) => {
-      console.log('Connected client on port %s.', this.port, socket.id);
+      console.log('Connected client', socket.id);
       // create the userId and save to socket so we can remove them on disconnect
-      // (socket.id).socket.emit('user', {
+      // this.io.to(socket.id).emit('user', {
       //   id: (Math.floor(Math.random() * 1000000) + 1),
       //   socket: socket.id
       // });
@@ -71,6 +71,10 @@ export class ChatServer {
 
       socket.on('disconnect', () => {
         console.log('Client disconnected', socket.id);
+        let userId = this.gameUsers.findIndex((gameUser) => { return gameUser.socket === socket.id; });
+        if (userId !== -1) {
+          this.gameUsers.splice(userId, 1);
+        }
       });
     });
   }
@@ -121,6 +125,7 @@ export class ChatServer {
           question: this.gameQuestions[index].question,
           type: this.gameQuestions[index].type
         }
+        console.log('Answer: ', this.gameQuestions[index].correct_answer);
         this.io.emit('question', q);
       } else {
         clearInterval(interval);
@@ -153,7 +158,7 @@ export class ChatServer {
 
   private checkUserAnswer(user) {
     if (this.previousQuestion && user) {
-      console.log(user.answer, this.previousQuestion.correct_answer);
+      // console.log(user.answer, this.previousQuestion.correct_answer);
       if (this.previousQuestion.correct_answer === user.answer) {
         this.updateUserScore(user);
       }
