@@ -6,14 +6,30 @@
   max-height: 400px;
   overflow-x: hidden;
   overflow-y: scroll;
-  padding: 32px 16px;
+  padding: 48px 16px 32px;
   position: relative;
   text-align: left;
 
   .name {
     position: absolute;
     right: 16px;
-    top: 0;
+    top: 8px;
+    width: calc(100% - 32px);
+
+    .user {
+      font-weight: bold;
+      position: relative;
+      top: 8px;
+    }
+    
+    .change {
+      color: rgba(0, 0, 255, 0.24);
+      font-size: 12px;
+      position: absolute;
+      right: 26px;
+      top: 10px;
+      white-space: nowrap;
+    }
 
     input {
       outline: none;

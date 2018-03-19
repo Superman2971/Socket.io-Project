@@ -13,10 +13,12 @@ export class ChatComponent implements OnInit {
   messageContent: string;
   chatSubscription: any;
   showInput = false;
+  hoverName = false;
 
   constructor(private socketService: SocketService) {
     this.chatSubscription = this.socketService.onMessage()
     .subscribe((message: any) => {
+      this.messages = this.messages.slice(0, 50);
       this.messages.unshift(message);
     });
   }

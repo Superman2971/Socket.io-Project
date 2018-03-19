@@ -1,5 +1,7 @@
 <div class="chat">
-  <div class="name">
+  <div class="name" (mouseover)="hoverName = true" (mouseleave)="hoverName = false">
+    <div *ngIf="!showInput" class="user" [innerHtml]="user.name"></div>
+    <div *ngIf="!showInput && hoverName" class="change">Change Name?</div>
     <input *ngIf="showInput"
       maxlength="20"
       placeholder="User Name"
