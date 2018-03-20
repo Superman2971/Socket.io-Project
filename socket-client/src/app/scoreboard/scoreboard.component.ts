@@ -15,7 +15,7 @@ export class ScoreboardComponent implements OnInit {
   ngOnInit() {
     this.socketSubscription = this.socketService.onScoreboard()
     .subscribe((scores: any) => {
-      console.log('scoreboard', scores);
+      // console.log('scoreboard', scores);
       this.scores = scores;
     });
   }

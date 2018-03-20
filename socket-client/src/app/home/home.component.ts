@@ -53,7 +53,7 @@ export class HomeComponent {
   grabInitialData() {
     // Call for initial questions and scoreboard
     this.api.getInitialInfo().subscribe((data) => {
-      console.log('data', data);
+      // console.log('data', data);
       this.initScoreboard = data.scoreboard;
       this.initQuestion = data.question;
       if (this.socketService.socket.id) {
