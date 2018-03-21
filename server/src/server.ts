@@ -138,22 +138,25 @@ export class ChatServer {
   private shuffle(answerArray, correctAnswer) {
     if (!answerArray || !correctAnswer) {
       return [];
+    } else if (answerArray.indexOf(correctAnswer) === -1) {
+      answerArray.push(correctAnswer); // push correct answer into incorrect answer (for some reason this return the new length)
+      let currentIndex = answerArray.length;
+      let temporaryValue;
+      let randomIndex;
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = answerArray[currentIndex];
+        answerArray[currentIndex] = answerArray[randomIndex];
+        answerArray[randomIndex] = temporaryValue;
+      }
+      return answerArray;
+    } else {
+      return answerArray;
     }
-    answerArray.push(correctAnswer); // push correct answer into incorrect answer (for some reason this return the new length)
-    let currentIndex = answerArray.length;
-    let temporaryValue;
-    let randomIndex;
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      // And swap it with the current element.
-      temporaryValue = answerArray[currentIndex];
-      answerArray[currentIndex] = answerArray[randomIndex];
-      answerArray[randomIndex] = temporaryValue;
-    }
-    return answerArray;
   }
 
   private checkUserAnswer(user) {

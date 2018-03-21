@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Input } from '@angular/core';
+import { Component, OnInit, HostListener, Input, ElementRef } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 
 @Component({
@@ -15,24 +15,19 @@ export class GameComponent implements OnInit {
     question: null,
     type: null
   };
-  // question: any = {
-  //   category: 'Entertainment: Video Games',
-  //   answers: [
-  //     'Mario Kart: Double Dash',
-  //     'Mario Kart 64',
-  //     'Super Mario Kart'
-  //   ],
-  //   question: 'Which ones of these Mario Kart games was made for the Gameboy Advance?',
-  //   type: 'multiple'
-  // };
   selectedAnswer: any;
   scoreboard: any;
   socketSubscription: any;
   socketSubscription2: any;
   clock: number;
   timer: any;
+  offsetLeft: number;
+  offsetTop: number;
 
-  constructor(private socketService: SocketService) {}
+  constructor(
+    private socketService: SocketService,
+    private elem: ElementRef
+  ) {}
 
   ngOnInit() {
     this.socketSubscription = this.socketService.onGame()
@@ -55,6 +50,9 @@ export class GameComponent implements OnInit {
       this.selectedAnswer = null;
       this.initCountdown();
     });
+    // set offset based on where game is at compared to parent element
+    this.offsetLeft = this.elem.nativeElement.parentNode.offsetLeft;
+    this.offsetTop = this.elem.nativeElement.parentNode.offsetTop;
   }
 
   @HostListener('mousemove', ['$event'])
@@ -65,8 +63,8 @@ export class GameComponent implements OnInit {
       socket: this.user.socket,
       id: this.user.id,
       color: this.user.color,
-      left: this.user.left,
-      top: this.user.top
+      left: this.user.left - this.offsetLeft,
+      top: this.user.top - this.offsetTop
     });
   }
 
