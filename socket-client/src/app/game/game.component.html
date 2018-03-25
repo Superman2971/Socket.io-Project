@@ -1,4 +1,5 @@
 <div class="game">
+  <div class="active-users">Active Users: <span [innerHtml]="users.length"></span></div>
   <div *ngIf="users.length > 0">
     <div *ngFor="let cursor of users">
       <div *ngIf="cursor.id !== user.id" class="user"
