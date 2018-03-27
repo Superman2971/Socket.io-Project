@@ -89,7 +89,7 @@ export class ChatServer {
     this.io.emit('game', this.gameUsers);
   }
 
-  private getQuestions() {
+  private getQuestions(attempt?) {
     https.get('https://opentdb.com/api.php?amount=10', (response) => {
       let data = '';
       // A chunk of data has been recieved.
@@ -99,17 +99,38 @@ export class ChatServer {
       });
       // The whole response has been received. Print out the result.
       response.on('end', () => {
-        // console.log('RESPONSE', data, JSON.parse(data));
-        this.gameQuestions = JSON.parse(data).results;
-        // console.log(this.gameQuestions);
-        this.serveQuestions();
+        if (data !== '') {
+          let parsedData = JSON.parse(data);
+          // console.log('RESPONSE', data, parsedData);
+          if (parsedData.results) {
+            this.gameQuestions = parsedData.results;
+            // console.log(this.gameQuestions);
+            this.serveQuestions();
+          } else {
+            console.log('JSON.parse Error: ', data);
+            this.failedGetQuestions(attempt);
+          }
+        } else {
+          this.failedGetQuestions(attempt);
+        }
       });
     }).on("error", (err) => {
       console.log('ERROR', err);
     });
   }
-  public getApp(): express.Application {
-    return this.app;
+
+  private failedGetQuestions(attempt?) {
+    if (attempt) {
+      if (attempt > 4) {
+        // 5 failed attempts, what now? Temporarily will just make it serve the same 10 questions
+        this.serveQuestions();
+      } else {
+        attempt++;
+        this.getQuestions(attempt);
+      }
+    } else {
+      this.getQuestions(1);
+    }
   }
 
   private serveQuestions() {
@@ -216,5 +237,9 @@ export class ChatServer {
         });
       }
     });
+  }
+
+  public getApp(): express.Application {
+    return this.app;
   }
 }
