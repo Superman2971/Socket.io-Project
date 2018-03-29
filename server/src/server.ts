@@ -204,12 +204,12 @@ export class ChatServer {
         name: user.name,
         score: 10
       });
+      this.io.to(user.id).emit('score', 10);
     } else {
       this.scoreboard[userId].name = user.name;
       this.scoreboard[userId].score += 10;
+      this.io.to(user.id).emit('score', this.scoreboard[userId].score);
     }
-    console.log(this.scoreboard[userId]);
-    this.io.to(user.id).emit('score', 'testing successful');
   }
 
   private changeApiAccess() {
