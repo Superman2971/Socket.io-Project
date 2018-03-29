@@ -148,6 +148,13 @@ export class ChatServer {
         }
         console.log('Answer: ', this.gameQuestions[index].correct_answer);
         this.io.emit('question', q);
+        // send scoreboard after 3 seconds
+        setTimeout(() => {
+          this.scoreboard.sort((a, b) => {
+            return (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0);
+          }).reverse();
+          this.io.emit('scoreboard', this.scoreboard.slice(0, 10));
+        }, 3000);
       } else {
         clearInterval(interval);
         this.getQuestions();
@@ -201,7 +208,8 @@ export class ChatServer {
       this.scoreboard[userId].name = user.name;
       this.scoreboard[userId].score += 10;
     }
-    this.io.emit('scoreboard', this.scoreboard);
+    console.log(this.scoreboard[userId]);
+    this.io.to(user.id).emit('score', 'testing successful');
   }
 
   private changeApiAccess() {
