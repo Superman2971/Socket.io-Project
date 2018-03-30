@@ -1,6 +1,7 @@
 import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
+import * as firebase from 'firebase';
 const https = require('https');
 
 export class ChatServer {
@@ -13,7 +14,7 @@ export class ChatServer {
   private gameQuestions: any[] = [];
   private previousQuestion: any;
   private currentQuestion: any;
-  private scoreboard: any[] = [];
+  // private scoreboard: any[] = [];
 
   constructor() {
     this.createApp();
@@ -24,6 +25,7 @@ export class ChatServer {
     this.getQuestions();
     this.changeApiAccess();
     this.defineRoutes();
+    this.initializeFirebase();
   }
 
   private createApp(): void {
@@ -114,7 +116,7 @@ export class ChatServer {
           this.failedGetQuestions(attempt);
         }
       });
-    }).on("error", (err) => {
+    }).on('error', (err) => {
       console.log('ERROR', err);
     });
   }
@@ -150,17 +152,25 @@ export class ChatServer {
         this.io.emit('question', q);
         // send scoreboard after 3 seconds
         setTimeout(() => {
-          this.scoreboard.sort((a, b) => {
-            return (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0);
-          }).reverse();
-          this.io.emit('scoreboard', this.scoreboard.slice(0, 10));
+          firebase.database().ref('score').orderByChild('score').limitToLast(10).once('value', (data) => {
+            let scores: Array<any> = [];
+            let snap: any = data.val();
+            for (let item in snap) {
+              scores.push(snap[item]);
+            }
+              scores.sort((a, b) => {
+                return (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0);
+              }).reverse();
+            this.io.emit('scoreboard', scores);
+          });
         }, 3000);
       } else {
         clearInterval(interval);
         this.getQuestions();
       }
       index++;
-    }, 30000);
+    // }, 30000);
+    }, 10000);
   }
 
   private shuffle(answerArray, correctAnswer) {
@@ -197,19 +207,37 @@ export class ChatServer {
   }
 
   private updateUserScore(user) {
-    let userId = this.scoreboard.findIndex((gameUser) => { return gameUser.id === user.id; });
-    if (userId === -1) {
-      this.scoreboard.push({
-        id: user.id,
-        name: user.name,
-        score: 10
-      });
-      this.io.to(user.id).emit('score', 10);
-    } else {
-      this.scoreboard[userId].name = user.name;
-      this.scoreboard[userId].score += 10;
-      this.io.to(user.id).emit('score', this.scoreboard[userId].score);
-    }
+    // let userId = this.scoreboard.findIndex((gameUser) => { return gameUser.id === user.id; });
+    // if (userId === -1) {
+    //   this.scoreboard.push({
+    //     id: user.id,
+    //     name: user.name,
+    //     score: 10
+    //   });
+    //   this.io.to(user.id).emit('score', 10);
+    // } else {
+    //   this.scoreboard[userId].name = user.name;
+    //   this.scoreboard[userId].score += 10;
+    //   this.io.to(user.id).emit('score', this.scoreboard[userId].score);
+    // }
+    ///////////////////////////////// NEW SCOREBOARD STUFF
+    let userDbInfo: any;
+    firebase.database().ref('score/' + user.id).once('value', (data) => {
+      userDbInfo = data.val();
+      if (userDbInfo) {
+        firebase.database().ref('score/' + user.id).set({
+          id: user.id,
+          name: user.name,
+          score: userDbInfo.score + 10
+        });
+      } else {
+        firebase.database().ref('score/' + user.id).set({
+          id: user.id,
+          name: user.name,
+          score: 10
+        });
+      }
+    });
   }
 
   private changeApiAccess() {
@@ -245,6 +273,19 @@ export class ChatServer {
         });
       }
     });
+  }
+
+  private initializeFirebase() {
+    // Initialize Firebase
+    var config = {
+      apiKey: 'AIzaSyA06i7uEZDVQE3TbjWwoLH9ctoxFpyZQVA',
+      authDomain: 'socket-qa.firebaseapp.com',
+      databaseURL: 'https://socket-qa.firebaseio.com',
+      projectId: 'socket-qa',
+      storageBucket: 'socket-qa.appspot.com',
+      messagingSenderId: '615361684672'
+    };
+    firebase.initializeApp(config);
   }
 
   public getApp(): express.Application {
