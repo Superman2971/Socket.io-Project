@@ -207,20 +207,6 @@ export class ChatServer {
   }
 
   private updateUserScore(user) {
-    // let userId = this.scoreboard.findIndex((gameUser) => { return gameUser.id === user.id; });
-    // if (userId === -1) {
-    //   this.scoreboard.push({
-    //     id: user.id,
-    //     name: user.name,
-    //     score: 10
-    //   });
-    //   this.io.to(user.id).emit('score', 10);
-    // } else {
-    //   this.scoreboard[userId].name = user.name;
-    //   this.scoreboard[userId].score += 10;
-    //   this.io.to(user.id).emit('score', this.scoreboard[userId].score);
-    // }
-    ///////////////////////////////// NEW SCOREBOARD STUFF
     let userDbInfo: any;
     firebase.database().ref('score/' + user.id).once('value', (data) => {
       userDbInfo = data.val();
@@ -230,12 +216,14 @@ export class ChatServer {
           name: user.name,
           score: userDbInfo.score + 10
         });
+        this.io.to(user.id).emit('score', userDbInfo.score + 10);
       } else {
         firebase.database().ref('score/' + user.id).set({
           id: user.id,
           name: user.name,
           score: 10
         });
+        this.io.to(user.id).emit('score', 10);
       }
     });
   }
