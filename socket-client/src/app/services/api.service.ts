@@ -44,4 +44,8 @@ export class ApiService {
   public getInitialInfo(): Observable<any> {
     return this.get('/getscores');
   }
+
+  public resetCursors(): Observable<any> {
+    return this.get('/resetcursors');
+  }
 }

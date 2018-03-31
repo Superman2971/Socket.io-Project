@@ -237,6 +237,7 @@ export class ChatServer {
   }
 
   private defineRoutes() {
+    // route to get scores for newly joining users
     this.app.get('/getscores', (req, res) => {
       firebase.database().ref('score').orderByChild('score').limitToLast(10).once('value', (data) => {
         let scores: Array<any> = [];
@@ -263,6 +264,12 @@ export class ChatServer {
           });
         }
       });
+    });
+    // route to manually reset the cursors on screen
+    this.app.get('/resetcursors', (req, res) => {
+      this.gameUsers = [];
+      this.io.emit('game', this.gameUsers);
+      res.send({reset: 'success'});
     });
   }
 

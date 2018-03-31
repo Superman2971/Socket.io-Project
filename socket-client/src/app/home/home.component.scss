@@ -7,4 +7,12 @@
   @media (max-width: 959px) {
     grid-template-columns: 1fr;
   }
+
+  .reset {
+    bottom: 0;
+    min-height: 100px;
+    min-width: 100px;
+    position: fixed;
+    right: 0;
+  }
 }

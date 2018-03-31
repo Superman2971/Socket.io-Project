@@ -20,6 +20,8 @@ export class HomeComponent {
     question: null,
     type: null
   };
+  holdingDownClick: boolean = false;
+  timeout: any;
 
   constructor(
     private socketService: SocketService,
@@ -62,5 +64,19 @@ export class HomeComponent {
     }, (err) => {
       console.log('err', err);
     });
+  }
+
+  initReset() {
+    this.holdingDownClick = true;
+    this.timeout = setTimeout(() => {
+      if (this.holdingDownClick) {
+        this.api.resetCursors().subscribe();
+      }
+    }, 3000);
+  }
+
+  releasedClick() {
+    this.holdingDownClick = false;
+    clearTimeout(this.timeout);
   }
 }

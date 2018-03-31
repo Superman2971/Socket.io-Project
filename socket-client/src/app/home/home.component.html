@@ -2,4 +2,5 @@
   <socket-game [user]="user" [question]="initQuestion"></socket-game>
   <socket-scoreboard [scores]="initScoreboard"></socket-scoreboard>
   <socket-chat [user]="user"></socket-chat>
+  <div class="reset" (mousedown)="initReset()" (mouseup)="releasedClick()"></div>
 </div>
