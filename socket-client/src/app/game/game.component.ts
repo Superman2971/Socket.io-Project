@@ -38,7 +38,6 @@ export class GameComponent implements OnInit {
     this.socketSubscription2 = this.socketService.onQuestion()
     .subscribe((question: any) => {
       if (this.selectedAnswer) {
-        // console.log('send answer', this.selectedAnswer);
         this.socketService.sendAnswer({
           id: this.user.socket,
           name: this.user.name,
@@ -46,7 +45,6 @@ export class GameComponent implements OnInit {
         });
       }
       this.question = question;
-      // console.log('Question', question);
       this.selectedAnswer = null;
       this.initCountdown();
     });
@@ -57,14 +55,14 @@ export class GameComponent implements OnInit {
 
   @HostListener('mousemove', ['$event'])
   onMousemove(event: MouseEvent) {
-    this.user.left = event.clientX;
-    this.user.top = event.clientY;
+    this.user.left = (((event.pageX - this.offsetLeft - 4) / this.elem.nativeElement.offsetWidth) * 100).toFixed(2);
+    this.user.top = (((event.pageY - this.offsetTop - 4) / this.elem.nativeElement.offsetHeight) * 100).toFixed(2);
     this.socketService.sendGame({
       socket: this.user.socket,
       id: this.user.id,
       color: this.user.color,
-      left: this.user.left - this.offsetLeft,
-      top: this.user.top - this.offsetTop
+      left: this.user.left,
+      top: this.user.top
     });
   }
 

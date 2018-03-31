@@ -4,8 +4,8 @@
     <div *ngFor="let cursor of users">
       <div *ngIf="cursor.id !== user.id" class="user"
         [style.background-color]="'rgb(' + cursor.color + ')'"
-        [style.left.px]="cursor.left + offsetLeft"
-        [style.top.px]="cursor.top + offsetTop"
+        [style.left.%]="cursor.left"
+        [style.top.%]="cursor.top"
       ></div>
     </div>
   </div>
