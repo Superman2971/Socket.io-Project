@@ -42,6 +42,6 @@ export class ApiService {
   }
 
   public getInitialInfo(): Observable<any> {
-    return this.get('/test');
+    return this.get('/getscores');
   }
 }

@@ -51,11 +51,6 @@ export class ChatServer {
 
     this.io.on('connect', (socket: any) => {
       console.log('Connected client', socket.id);
-      // create the userId and save to socket so we can remove them on disconnect
-      // this.io.to(socket.id).emit('user', {
-      //   id: (Math.floor(Math.random() * 1000000) + 1),
-      //   socket: socket.id
-      // });
       // set up the subscriptions
       socket.on('message', (m: any) => {
         // console.log('[server](message): %s', JSON.stringify(m));
@@ -64,7 +59,6 @@ export class ChatServer {
       socket.on('game', (g: any) => {
         // console.log('[server](game): %s', JSON.stringify(g));
         this.characterMove(g);
-        // this.io.emit('game', g);
       });
       socket.on('answer', (answer: any) => {
         // console.log('[server](answer): %s', JSON.stringify(answer));
@@ -106,7 +100,7 @@ export class ChatServer {
           // console.log('RESPONSE', data, parsedData);
           if (parsedData.results) {
             this.gameQuestions = parsedData.results;
-            // console.log(this.gameQuestions);
+            // console.log('Questions Response: ', this.gameQuestions);
             this.serveQuestions();
           } else {
             console.log('JSON.parse Error: ', data);
@@ -169,8 +163,7 @@ export class ChatServer {
         this.getQuestions();
       }
       index++;
-    // }, 30000);
-    }, 10000);
+    }, 30000);
   }
 
   private shuffle(answerArray, correctAnswer) {
@@ -244,22 +237,32 @@ export class ChatServer {
   }
 
   private defineRoutes() {
-    this.app.get('/test', (req, res) => {
-      if (this.currentQuestion) {
-        res.send({
-          scoreboard: this.scoreboard,
-          question: {
-            category: this.currentQuestion.category,
-            answers: this.shuffle(this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer),
-            question: this.currentQuestion.question,
-            type: this.currentQuestion.type
-          }
-        });
-      } else {
-        res.send({
-          scoreboard: this.scoreboard
-        });
-      }
+    this.app.get('/getscores', (req, res) => {
+      firebase.database().ref('score').orderByChild('score').limitToLast(10).once('value', (data) => {
+        let scores: Array<any> = [];
+        let snap: any = data.val();
+        for (let item in snap) {
+          scores.push(snap[item]);
+        }
+        scores.sort((a, b) => {
+          return (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0);
+        }).reverse();
+        if (this.currentQuestion) {
+          res.send({
+            scoreboard: scores,
+            question: {
+              category: this.currentQuestion.category,
+              answers: this.shuffle(this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer),
+              question: this.currentQuestion.question,
+              type: this.currentQuestion.type
+            }
+          });
+        } else {
+          res.send({
+            scoreboard: scores
+          });
+        }
+      });
     });
   }
 
