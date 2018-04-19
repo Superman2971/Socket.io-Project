@@ -111,7 +111,8 @@ export class ChatServer {
         }
       });
     }).on('error', (err) => {
-      console.log('ERROR', err);
+      console.log('QUESTIONS API ERROR', err);
+      this.failedGetQuestions(attempt);
     });
   }
 
